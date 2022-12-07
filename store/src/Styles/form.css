@@ -19,3 +19,5 @@ input{
     height: 25px;
 
 }
+ 
+    select,option{font-size: 18px;   width: 250px;}
