@@ -1,0 +1,21 @@
+.formContainer{
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
+   min-width: 700px;
+    justify-content: space-around;
+    background-color:ghostwhite;
+    padding: 50px;
+    color:#000;
+}
+button{
+    width: 100px;
+    height: 30px;
+    background-color: darkolivegreen;
+    color: #fff;
+}
+input{
+    width: 250px;
+    height: 25px;
+
+}
