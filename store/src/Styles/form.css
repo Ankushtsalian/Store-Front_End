@@ -21,3 +21,8 @@ input{
 }
  
     select,option{font-size: 18px;   width: 250px;}
+
+    ol{
+    background-color:rgb(186, 186, 188);
+color: #000;
+    }

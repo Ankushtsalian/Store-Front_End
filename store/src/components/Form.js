@@ -7,38 +7,44 @@ const companyList = ["ikea", "liddy", "caressa", "marcos"];
 const Form = () => {
   const [form, setForm] = useState({
     featured: false,
-    company: "ikea",
+    name: "",
+    company: "",
   });
-  const [res, setRes] = useState([]);
+  const [response, setResponse] = useState([]);
 
-  const { featured, company } = form;
+  const { featured, company, name } = form;
 
   const handleCheckbox = (event) => {
     setForm((formValues) => ({ ...formValues, featured: !featured }));
   };
 
   const handleSelect = (event) => {
-    const { name, value } = event.target;
+    const { value } = event.target;
     setForm((formValues) => ({ ...formValues, company: value }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.get(
-        `${URL}?featured=${featured}&company=${company}`
+      const res = await axios.get(
+        `${URL}?featured=${featured}&company=${company}&name=${name}`
       );
-      setRes(response.data.msg);
+      setResponse(res.data.msg);
     } catch (error) {
       console.log(error.response);
     }
+  };
+
+  const handleName = (event) => {
+    const { value } = event.target;
+    setForm((formValues) => ({ ...formValues, name: value }));
   };
 
   return (
     <div>
       <form className="formContainer" onSubmit={handleSubmit}>
         <div>
-          <label>Company : </label>{" "}
+          <label>Company : </label>
           <select onChange={handleSelect}>
             {companyList.map((opt) => (
               <option key={opt} value={opt}>
@@ -48,17 +54,31 @@ const Form = () => {
           </select>
         </div>
         <div>
+          <label>name : </label>
+          <input onChange={handleName} />
+        </div>
+        <div>
           <label>Featured : </label>
           <input type="checkbox" value={featured} onChange={handleCheckbox} />
         </div>
         <button>Submit</button>
       </form>
       <div>
-        {res.map((result) => {
+        {response.map((result, i) => {
           const { name, price, featured, rating, createdAt, company } = result;
-          return <p>{name}</p>;
+          return (
+            <ol>
+              <li>index : {i + 1}</li>
+              <li>name : {name}</li>
+              <li>price : {price}</li>
+              <li>featured : {String(featured)}</li>
+              <li>rating : {rating}</li>
+              <li>createdAt : {createdAt}</li>
+              <li>company : {company}</li>
+            </ol>
+          );
         })}
-      </div>
+      </div>{" "}
     </div>
   );
 };
