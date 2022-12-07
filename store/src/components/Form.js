@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../Styles/form.css";
+import Result from "./Result";
 const URL = "http://localhost:5000/api/v1/products";
 const companyList = ["ikea", "liddy", "caressa", "marcos"];
 
@@ -42,43 +43,64 @@ const Form = () => {
 
   return (
     <div>
-      <form className="formContainer" onSubmit={handleSubmit}>
-        <div>
-          <label>Company : </label>
-          <select onChange={handleSelect}>
-            {companyList.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </select>
+      <form className="form" onSubmit={handleSubmit}>
+        <div className="formContainer">
+          <div className="form-row-container">
+            <label>Company : </label>
+            <div className="form-row">
+              <select onChange={handleSelect}>
+                {companyList.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="form-row-container">
+            <label>name : </label>
+            <div className="form-row">
+              <input onChange={handleName} />
+            </div>
+          </div>
+          <div className="form-row-container">
+            <label>Featured : </label>
+            <div className="form-row">
+              <input
+                type="checkbox"
+                value={featured}
+                onChange={handleCheckbox}
+              />
+            </div>
+          </div>
+          <button>Submit</button>
         </div>
         <div>
-          <label>name : </label>
-          <input onChange={handleName} />
+          <div className="formContainer">
+            <div className="form-row-container">
+              <label>Sort by name : </label>
+              <div className="form-row">
+                <button>A to Z</button>
+                <button>Z to A</button>
+              </div>
+            </div>
+            <div className="form-row-container">
+              <label>Sort by Price</label>
+              <div className="form-row">
+                <button>High to Low</button>
+                <button>Low to High</button>
+              </div>
+            </div>
+
+            <button>Submit</button>
+          </div>
         </div>
-        <div>
-          <label>Featured : </label>
-          <input type="checkbox" value={featured} onChange={handleCheckbox} />
-        </div>
-        <button>Submit</button>
       </form>
       <div>
-        {response.map((result, i) => {
-          const { name, price, featured, rating, createdAt, company } = result;
-          return (
-            <ol>
-              <li>index : {i + 1}</li>
-              <li>name : {name}</li>
-              <li>price : {price}</li>
-              <li>featured : {String(featured)}</li>
-              <li>rating : {rating}</li>
-              <li>createdAt : {createdAt}</li>
-              <li>company : {company}</li>
-            </ol>
-          );
-        })}
-      </div>{" "}
+        {response.map((result, i) => (
+          <Result key={i} result={result} index={i} />
+        ))}
+      </div>
     </div>
   );
 };

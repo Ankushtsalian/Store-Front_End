@@ -1,28 +1,47 @@
-.formContainer{
+.formContainer {
     display: flex;
     flex-direction: column;
     min-height: 300px;
-   min-width: 700px;
+    min-width: 700px;
     justify-content: space-around;
-    background-color:ghostwhite;
     padding: 50px;
-    color:#000;
+    color: #000;
 }
-button{
-    width: 100px;
+
+button {
+    width: 120px;
     height: 30px;
     background-color: darkolivegreen;
-    color: #fff;
+    color: #fff;font-size: 15px;
 }
-input{
-    width: 250px;
-    height: 25px;
+
+
+
+
+select, option ,input{
+    font-size: 18px;
+    width: 350px;
+    height: 35px;
+    padding: 0;
+}
+
+ol {
+    background-color: rgb(186, 186, 188);
+    color: #000;
+}
+
+.form{
+    display: flex;
+    flex-direction: row;
+    background-color: ghostwhite;
+    margin-top: 100px;
+    color: #000;
+    justify-content: space-evenly;
 
 }
- 
-    select,option{font-size: 18px;   width: 250px;}
 
-    ol{
-    background-color:rgb(186, 186, 188);
-color: #000;
-    }
+.form-row-container{
+    max-width: 500px;
+    display: flex;
+    justify-content: space-between;
+}
