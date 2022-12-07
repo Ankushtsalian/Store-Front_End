@@ -10,11 +10,14 @@ const Form = () => {
     featured: false,
     name: "",
     company: "",
+    nameSort: "",
+    priceSort: "",
   });
   const [response, setResponse] = useState([]);
 
-  const { featured, company, name } = form;
-
+  const { featured, company, name, nameSort, priceSort } = form;
+  const sort = nameSort + "," + priceSort;
+  //   console.log(sort);
   const handleCheckbox = (event) => {
     setForm((formValues) => ({ ...formValues, featured: !featured }));
   };
@@ -28,7 +31,7 @@ const Form = () => {
     event.preventDefault();
     try {
       const res = await axios.get(
-        `${URL}?featured=${featured}&company=${company}&name=${name}`
+        `${URL}?featured=${featured}&company=${company}&name=${name}&sort=${sort}`
       );
       setResponse(res.data.msg);
     } catch (error) {
@@ -43,7 +46,9 @@ const Form = () => {
 
   return (
     <div>
-      <form className="form" onSubmit={handleSubmit}>
+      <p>{nameSort}</p>
+      <p>{priceSort}</p>
+      <form className="form">
         <div className="formContainer">
           <div className="form-row-container">
             <label>Company : </label>
@@ -73,26 +78,64 @@ const Form = () => {
               />
             </div>
           </div>
-          <button>Submit</button>
+          <button onClick={handleSubmit}>Submit</button>
         </div>
         <div>
           <div className="formContainer">
             <div className="form-row-container">
               <label>Sort by name : </label>
               <div className="form-row">
-                <button>A to Z</button>
-                <button>Z to A</button>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    return setForm((formValues) => ({
+                      ...formValues,
+                      nameSort: "name",
+                    }));
+                  }}
+                >
+                  A to Z
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    return setForm((formValues) => ({
+                      ...formValues,
+                      nameSort: "-name",
+                    }));
+                  }}
+                >
+                  Z to A
+                </button>
               </div>
             </div>
             <div className="form-row-container">
               <label>Sort by Price</label>
               <div className="form-row">
-                <button>High to Low</button>
-                <button>Low to High</button>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    return setForm((formValues) => ({
+                      ...formValues,
+                      priceSort: "-price",
+                    }));
+                  }}
+                >
+                  High to Low
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    return setForm((formValues) => ({
+                      ...formValues,
+                      priceSort: "price",
+                    }));
+                  }}
+                >
+                  Low to High
+                </button>
               </div>
             </div>
-
-            <button>Submit</button>
           </div>
         </div>
       </form>
