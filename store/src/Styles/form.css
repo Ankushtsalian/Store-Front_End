@@ -33,15 +33,27 @@ ol {
 .form{
     display: flex;
     flex-direction: row;
+  
+    justify-content: space-evenly;
+
+}
+.form-container{
     background-color: ghostwhite;
     margin-top: 100px;
     color: #000;
-    justify-content: space-evenly;
-
 }
 
 .form-row-container{
     max-width: 500px;
     display: flex;
     justify-content: space-between;
+}
+
+.pagination-container button{
+    width: 80px;
+    height: 30px;
+}
+.pagination-container{
+    display: flex;
+    justify-content: center;
 }
