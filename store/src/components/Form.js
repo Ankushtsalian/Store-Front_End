@@ -12,12 +12,28 @@ const Form = () => {
     company: "",
     nameSort: "",
     priceSort: "",
+    page: 0,
   });
+  const [pageResponse, setPageRes] = useState([]);
   const [response, setResponse] = useState([]);
 
-  const { featured, company, name, nameSort, priceSort } = form;
+  const { featured, company, name, nameSort, priceSort, page } = form;
+
   const sort = nameSort + "," + priceSort;
-  //   console.log(sort);
+  const pageNumber = pageResponse?.length / 10;
+  console.log(Math.ceil(pageNumber));
+
+  useEffect(
+    () => async () => {
+      try {
+        const res = await axios.get(URL);
+        setPageRes(res.data.msg);
+      } catch (error) {
+        console.log(error.response);
+      }
+    },
+    []
+  );
   const handleCheckbox = (event) => {
     setForm((formValues) => ({ ...formValues, featured: !featured }));
   };
@@ -27,28 +43,33 @@ const Form = () => {
     setForm((formValues) => ({ ...formValues, company: value }));
   };
 
+  const handleName = (event) => {
+    const { value } = event.target;
+    setForm((formValues) => ({ ...formValues, name: value }));
+  };
+
+  const handlePage = (e, i) => {
+    e.preventDefault();
+    setForm((formValues) => ({ ...formValues, page: i }));
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const res = await axios.get(
-        `${URL}?featured=${featured}&company=${company}&name=${name}&sort=${sort}`
+        `${URL}?featured=${featured}&company=${company}&name=${name}&sort=${sort}&page=${page}`
       );
       setResponse(res.data.msg);
     } catch (error) {
       console.log(error.response);
     }
   };
-
-  const handleName = (event) => {
-    const { value } = event.target;
-    setForm((formValues) => ({ ...formValues, name: value }));
-  };
-
   return (
     <div>
       <p>{nameSort}</p>
       <p>{priceSort}</p>
       <form className="form">
+        {/* ----------------------------INPUTS---------------------------------------- */}
         <div className="formContainer">
           <div className="form-row-container">
             <label>Company : </label>
@@ -80,63 +101,70 @@ const Form = () => {
           </div>
           <button onClick={handleSubmit}>Submit</button>
         </div>
-        <div>
-          <div className="formContainer">
-            <div className="form-row-container">
-              <label>Sort by name : </label>
-              <div className="form-row">
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    return setForm((formValues) => ({
-                      ...formValues,
-                      nameSort: "name",
-                    }));
-                  }}
-                >
-                  A to Z
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    return setForm((formValues) => ({
-                      ...formValues,
-                      nameSort: "-name",
-                    }));
-                  }}
-                >
-                  Z to A
-                </button>
-              </div>
-            </div>
-            <div className="form-row-container">
-              <label>Sort by Price</label>
-              <div className="form-row">
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    return setForm((formValues) => ({
-                      ...formValues,
-                      priceSort: "-price",
-                    }));
-                  }}
-                >
-                  High to Low
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    return setForm((formValues) => ({
-                      ...formValues,
-                      priceSort: "price",
-                    }));
-                  }}
-                >
-                  Low to High
-                </button>
-              </div>
+        {/* ----------------------------SORTS---------------------------------------- */}
+        <div className="formContainer">
+          <div className="form-row-container">
+            <label>Sort by name : </label>
+            <div className="form-row">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  return setForm((formValues) => ({
+                    ...formValues,
+                    nameSort: "name",
+                  }));
+                }}
+              >
+                A to Z
+              </button>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  return setForm((formValues) => ({
+                    ...formValues,
+                    nameSort: "-name",
+                  }));
+                }}
+              >
+                Z to A
+              </button>
             </div>
           </div>
+          <div className="form-row-container">
+            <label>Sort by Price</label>
+            <div className="form-row">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  return setForm((formValues) => ({
+                    ...formValues,
+                    priceSort: "-price",
+                  }));
+                }}
+              >
+                High to Low
+              </button>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  return setForm((formValues) => ({
+                    ...formValues,
+                    priceSort: "price",
+                  }));
+                }}
+              >
+                Low to High
+              </button>
+            </div>
+          </div>
+        </div>
+        {/* ---------------------------PAGINATION---------------------------------------- */}
+        <div className="pagination-container">
+          {response.map((a, i) => (
+            <button key={i} onClick={(e) => handlePage(e, i)}>
+              {i}
+            </button>
+          ))}
         </div>
       </form>
       <div>
