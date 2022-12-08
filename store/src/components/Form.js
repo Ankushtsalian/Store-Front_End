@@ -35,6 +35,20 @@ const Form = () => {
     }
   };
 
+  const datafn = async () => {
+    try {
+      const res = await axios.get(
+        `${URL}?featured=${featured}&company=${company}&name=${name}&sort=${sort}&page=${
+          page
+          // page > 0 ? page : ""
+        }`
+      );
+      setResponse(() => res.data.msg);
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
   useEffect(() => {
     pagefn();
     return () => {
@@ -61,25 +75,19 @@ const Form = () => {
     setForm((formValues) => ({ ...formValues, page: i + 1 }));
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const res = await axios.get(
-        `${URL}?featured=${featured}&company=${company}&name=${name}&sort=${sort}&page=${
-          page > 0 ? page : ""
-        }`
-      );
-      console.log(res.data.msg.length);
-      setResponse(() => res.data.msg);
-    } catch (error) {
-      console.log(error.response);
-    }
-  };
+  useEffect(() => {
+    setForm((formValues) => ({ ...formValues, page: 0 }));
+
+    datafn();
+
+    return () => {
+      console.log("DONE");
+    };
+  }, [featured, company, name, sort, page]);
 
   // console.log("pageResponse : " + pageResponse.length);
   // console.log("pageNumber : " + Math.ceil(pageNumber));
   // console.log(featured, company, name);
-  console.log(response);
   return (
     <div>
       <p>{nameSort}</p>
@@ -117,7 +125,6 @@ const Form = () => {
                 />
               </div>
             </div>
-            <button onClick={handleSubmit}>Submit</button>
           </div>
           {/* ----------------------------SORTS---------------------------------------- */}
           <div className="formContainer">
