@@ -3,7 +3,8 @@ import axios from "axios";
 import "../Styles/form.css";
 import Result from "./Result";
 const URL = "http://localhost:5000/api/v1/products";
-const companyList = ["", "ikea", "liddy", "caressa", "marcos"];
+let companyList = [];
+// const companyList = ["", "ikea", "liddy", "caressa", "marcos"];
 
 const Form = () => {
   const [form, setForm] = useState({
@@ -16,6 +17,7 @@ const Form = () => {
   });
   const [pageResponse, setPageRes] = useState([]);
   const [response, setResponse] = useState([]);
+  const [companyResponse, setCompanyResponse] = useState([]);
 
   const { featured, company, name, nameSort, priceSort, page } = form;
 
@@ -43,7 +45,22 @@ const Form = () => {
           // page > 0 ? page : ""
         }`
       );
+      console.log(res.data.selectCompany);
       setResponse(() => res.data.msg);
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
+  const companyOptionfn = async () => {
+    try {
+      const res = await axios.get(URL);
+
+      companyList = [
+        ...new Set(res.data.companyOptions.map((res) => res.company)),
+      ];
+      // setResponse(() => res.data.msg);
+      console.log(companyList);
     } catch (error) {
       console.log(error.response);
     }
@@ -55,6 +72,13 @@ const Form = () => {
       console.log("DONE");
     };
   }, [response]);
+
+  useEffect(() => {
+    companyOptionfn();
+    return () => {
+      console.log("DONE");
+    };
+  }, []);
 
   const handleCheckbox = (event) => {
     setForm((formValues) => ({ ...formValues, featured: !featured }));
