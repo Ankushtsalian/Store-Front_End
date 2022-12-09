@@ -4,7 +4,6 @@ import "../Styles/form.css";
 import Result from "./Result";
 const URL = "http://localhost:5000/api/v1/products";
 let companyList = [];
-// const companyList = ["", "ikea", "liddy", "caressa", "marcos"];
 
 const Form = () => {
   const [form, setForm] = useState({
@@ -17,7 +16,7 @@ const Form = () => {
   });
   const [pageResponse, setPageRes] = useState([]);
   const [response, setResponse] = useState([]);
-  const [companyResponse, setCompanyResponse] = useState([]);
+  const [range, setRange] = useState(3);
 
   const { featured, company, name, nameSort, priceSort, page } = form;
 
@@ -36,16 +35,12 @@ const Form = () => {
       console.log(error.response);
     }
   };
-
+  // const ratingVal = "4";
   const datafn = async () => {
     try {
       const res = await axios.get(
-        `${URL}?featured=${featured}&company=${company}&name=${name}&sort=${sort}&page=${
-          page
-          // page > 0 ? page : ""
-        }`
+        `${URL}?featured=${featured}&company=${company}&name=${name}&sort=${sort}&page=${page}&numericFilters=rating>${range}`
       );
-      console.log(res.data.selectCompany);
       setResponse(() => res.data.msg);
     } catch (error) {
       console.log(error.response);
@@ -59,8 +54,7 @@ const Form = () => {
       companyList = [
         ...new Set(res.data.companyOptions.map((res) => res.company)),
       ];
-      // setResponse(() => res.data.msg);
-      console.log(companyList);
+      companyList.unshift("");
     } catch (error) {
       console.log(error.response);
     }
@@ -91,12 +85,19 @@ const Form = () => {
 
   const handleName = (event) => {
     const { value } = event.target;
-    setForm((formValues) => ({ ...formValues, name: value }));
+    setTimeout(() => {
+      setForm((formValues) => ({ ...formValues, name: value }));
+    }, 1000);
   };
 
   const handlePage = (e, i) => {
     e.preventDefault();
     setForm((formValues) => ({ ...formValues, page: i + 1 }));
+  };
+
+  const handleRange = (e) => {
+    // console.log();
+    setRange(e.target.value);
   };
 
   useEffect(() => {
@@ -107,16 +108,10 @@ const Form = () => {
     return () => {
       console.log("DONE");
     };
-  }, [featured, company, name, sort, page]);
+  }, [featured, company, name, sort, page, range]);
 
-  // console.log("pageResponse : " + pageResponse.length);
-  // console.log("pageNumber : " + Math.ceil(pageNumber));
-  // console.log(featured, company, name);
   return (
     <div>
-      <p>{nameSort}</p>
-      <p>{priceSort}</p>
-      <p>{page}</p>
       <form className="form-container">
         <div className="form">
           {/* ----------------------------INPUTS---------------------------------------- */}
@@ -180,6 +175,24 @@ const Form = () => {
               </div>
             </div>
             <div className="form-row-container">
+              <label>Sort by range of rating : </label>
+              <div className="form-row">
+                <div className="slidecontainer">
+                  <input
+                    type="range"
+                    min="1"
+                    max="5"
+                    className="slider"
+                    id="myRange"
+                    onChange={handleRange}
+                    title="value"
+                    value={range}
+                  />
+                </div>
+                <span>{range}</span>
+              </div>
+            </div>
+            <div className="form-row-container">
               <label>Sort by Price</label>
               <div className="form-row">
                 <button
@@ -209,15 +222,17 @@ const Form = () => {
           </div>
         </div>
         {/* ---------------------------PAGINATION---------------------------------------- */}
-        <div className="pagination-container">
-          {Array.from(Array(pageNumber), (_, i) => (
-            <button key={i} onClick={(e) => handlePage(e, i)}>
-              {i + 1}
-            </button>
-          ))}
-        </div>
+        {response.length !== 0 && (
+          <div className="pagination-container">
+            {Array.from(Array(pageNumber), (_, i) => (
+              <button key={i} onClick={(e) => handlePage(e, i)}>
+                {i + 1}
+              </button>
+            ))}
+          </div>
+        )}
       </form>
-      <div>
+      <div className="result-notes">
         {response.map((result, i) => (
           <Result key={i} result={result} index={i} />
         ))}
